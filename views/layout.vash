@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta>
+  <title>@model.title</title>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+<body>
+  @html.block('content')
+  @if (process.env.NODE_ENV !== 'prodution') {
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var waitingToReconnect = false;
+      var socket = io(window.location.host);
+      socket.on('connect', function () {
+        if (waitingToReconnect)
+          location.reload();
+      });
+      socket.on('disconnect', function () {
+        waitingToReconnect = true;
+      });
+
+      /**
+       * This code is more efficient, you can use this too instead of above.
+       * But it makes browser stop displaying page if the server goes down.
+      io(window.location.host).on('disconnect', function(){
+          location.reload();
+      });*/
+    </script>
+    }
+</body>
+</html>
